@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -euo pipefail
+packagedir=/var/www/html/debian
+
+url=${1}
+debfile=$(rev <<< "$url" | cut -d'/' -f1 | rev)
+
+if [ -f "$packagedir/pool/stretch/p/plexmediaserver/$debfile" ]; then
+	exit
+fi
+echo $debfile
+
+dir=$(mktemp -d)
+function finish {
+  rm -r "$dir"
+}
+trap finish EXIT
+
+(
+cd "$dir"
+
+wget -q "$url"
+/opt/max/plex/convert-deb "$debfile"
+reprepro --silent -b "$packagedir" -C main --confdir /etc/reprepro/ includedeb debian *max1*.deb
+
+)
+

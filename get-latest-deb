@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+arch=${1}
+curl -s https://plex.tv/api/downloads/1.json?channel=plexpass | jq -r .computer.Linux.releases[$arch].url

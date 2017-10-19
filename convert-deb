@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -euo pipefail
+
+dir=$(mktemp -d)
+arch="$(rev <<< "$1" | cut -d'.' -f2 | cut -d'_' -f1 | rev)"
+dest="${1:0:-10}-max1_${arch}.deb"
+
+function finish {
+  rm -r "$dir" 
+  rm -f "$dir.deb" 
+}
+trap finish EXIT
+
+dpkg-deb -R "$1" "$dir"
+sed -i '/plexmediaserver.list/d' "$dir/DEBIAN/conffiles"
+rm -r "$dir/etc/apt"
+
+dpkg-deb --build "$dir" >/dev/null
+mv "$dir.deb" "$dest"

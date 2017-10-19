@@ -1,0 +1,5 @@
+Codename: stretch
+Suite: debian
+SignWith: default
+Architectures: amd64 i386
+Components: main

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -euo pipefail
+
+#amd64
+/opt/max/plex/sync-deb "$(/opt/max/plex/get-latest-deb 0)"
+
+#i386
+/opt/max/plex/sync-deb "$(/opt/max/plex/get-latest-deb 1)"
